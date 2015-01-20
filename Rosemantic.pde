@@ -220,7 +220,7 @@ void setup() {
         ;
   buttonPdf.getCaptionLabel().align( CENTER, CENTER);
 
-  Button buttonPdf2 = cp5.addButton("export_pdf_turn_hue")
+  Button buttonPdf2 = cp5.addButton("export_pdf_cycle_hue")
     .setPosition(170, 515)
       .setSize(140, 20)
         ;
@@ -231,20 +231,24 @@ void setup() {
       .setSize(140, 20)
         ;
   buttonSvg.getCaptionLabel().align( CENTER, CENTER);
-  
-  Button buttonSvg2 = cp5.addButton("export_svg_turn_hue")
+
+  Button buttonSvg2 = cp5.addButton("export_svg_cycle_hue")
     .setPosition(170, 565)
       .setSize(140, 20)
         ;
   buttonSvg2.getCaptionLabel().align( CENTER, CENTER);
-  
+
   Toggle toggleBackground = cp5.addToggle("background")
     .setPosition(10, 680)
       .setSize(300, 15)
         .setValue(true)
           .setMode(ControlP5.SWITCH)
-            ;
+            .setValueLabel("prova")
+              ;
   toggleBackground.getCaptionLabel().align( ControlP5.RIGHT_OUTSIDE, CENTER);
+  toggleBackground.captionLabel().style().marginLeft = 5;
+
+  randomize();
 }
 
 
@@ -252,11 +256,29 @@ void draw() {
   background(backgroundColor);
   fill(color(0, 0, 25));
   rect(0, 0, 380, 700);
+  
+  fill(color(0, 0, 0));
+    rect(10, 675, 150, 5);
+    
+    fill(color(0, 0, 100));
+    rect(160, 675, 150, 5);
+    
+  paintGradient(10, 115, 300, 5);
+    paintGradient(10, 185, 300, 5);
+  
   if (shouldRandomize) {
     randomizeVectors();
     shouldRandomize = false;
   }
   drawVectors();
+}
+
+void paintGradient(float x, float y, float width, float height) {
+  for (int i = 0; i < width; ++i) {
+    float hue = map(i/width, 0, 1, 0, 360);
+    stroke(hue, 100, 100);
+    line(x+i, y, x+i, y+height);
+  }
 }
 
 void controlEvent(ControlEvent event) {
@@ -301,11 +323,24 @@ void background(boolean flag) {
 }
 
 void load() {
-  cp5.loadProperties(("parameters"));
+  selectInput("Select a parameters file to load", "load_callback");
+}
+
+void load_callback(File selection) {
+  if (selection != null && selection.getName().toLowerCase().endsWith(".ser")) {
+    cp5.loadProperties(selection.getAbsolutePath());
+    randomize();
+  }
 }
 
 void save() {
-  cp5.saveProperties(("parameters"));
+  selectOutput("Select a parameters file to save to", "save_callback");
+}
+
+void save_callback(File selection) {
+  if (selection != null) {
+    cp5.saveProperties(selection.getAbsolutePath());
+  }
 }
 
 void repetitions(int number) {
@@ -377,16 +412,16 @@ void export_pdf() {
   drawPdf(false);
 }
 
-void export_pdf_turn_hue() {
+void export_pdf_cycle_hue() {
   drawPdf(true);
 }
 
 void export_svg() {
-    drawSvg(true);
+  drawSvg(true);
 }
 
-void export_svg_turn_hue() {
-    drawSvg(true);
+void export_svg_cycle_hue() {
+  drawSvg(true);
 }
 
 void drawSvg(boolean turnHue) {
@@ -496,9 +531,5 @@ void drawVectors() {
     triangle(origin.x, origin.y, origin.x + vectors2[k].x, origin.y + vectors2[k].y, origin.x + vectors3[k].x, origin.y + vectors3[k].y);
   }
   blendMode(BLEND);
-}
-
-float gold_ratio(float rand) {
-  return (rand + golden_ratio_conjugate) % 1;
 }
 
