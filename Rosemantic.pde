@@ -203,7 +203,7 @@ void setup() {
 
   Button buttonRandomize = cp5.addButton("randomize")
     .setPosition(10, 465)
-      .setSize(140, 70)
+      .setSize(140, 120)
         ;
   buttonRandomize.getCaptionLabel().align(CENTER, CENTER);
 
@@ -220,22 +220,31 @@ void setup() {
         ;
   buttonPdf.getCaptionLabel().align( CENTER, CENTER);
 
-  Button buttonSvg = cp5.addButton("export_svg")
+  Button buttonPdf2 = cp5.addButton("export_pdf_turn_hue")
     .setPosition(170, 515)
       .setSize(140, 20)
         ;
-  buttonSvg.getCaptionLabel().align( CENTER, CENTER);
+  buttonPdf2.getCaptionLabel().align( CENTER, CENTER);
 
-  Textlabel labelBackground = cp5.addTextlabel("label")
-    .setText("BACKGROUND COLOR")
-      .setPosition(10, 615)
+  Button buttonSvg = cp5.addButton("export_svg")
+    .setPosition(170, 540)
+      .setSize(140, 20)
         ;
-
-  ColorPicker cpBackground = cp5.addColorPicker("background")
-    .setPosition(10, 630)
+  buttonSvg.getCaptionLabel().align( CENTER, CENTER);
+  
+  Button buttonSvg2 = cp5.addButton("export_svg_turn_hue")
+    .setPosition(170, 565)
+      .setSize(140, 20)
+        ;
+  buttonSvg2.getCaptionLabel().align( CENTER, CENTER);
+  
+  Toggle toggleBackground = cp5.addToggle("background")
+    .setPosition(10, 680)
       .setSize(300, 15)
-        .setColorValue(backgroundColor)
-          ;
+        .setValue(true)
+          .setMode(ControlP5.SWITCH)
+            ;
+  toggleBackground.getCaptionLabel().align( ControlP5.RIGHT_OUTSIDE, CENTER);
 }
 
 
@@ -278,14 +287,16 @@ void controlEvent(ControlEvent event) {
   } else if (event.isFrom("brightness2")) {
     minBrightness2 = int(event.getController().getArrayValue(0));
     maxBrightness2 = int(event.getController().getArrayValue(1));
-  } else if (event.isFrom("background")) {
-    int r = int(event.getArrayValue(0));
-    int g = int(event.getArrayValue(1));
-    int b = int(event.getArrayValue(2));
-    int a = int(event.getArrayValue(3));
-    backgroundColor = color(r, g, b, a);
   } else if (event.isGroup() && event.name().equals("blending")) {
     blending = (int) event.group().value();
+  }
+}
+
+void background(boolean flag) {
+  if (flag == true) {
+    backgroundColor = color(0, 0, 0);
+  } else {
+    backgroundColor = color(0, 0, 100);
   }
 }
 
@@ -319,13 +330,20 @@ void num(int number) {
   num =  number;
 }
 
-void export_pdf() {
+void drawPdf(boolean turnHue) {
+
+  float stepSize = 360/ num;
   for (int i = 0; i < num; i++) {
     PGraphics pdf = createGraphics(600, 600, PDF, fileName + "-" + (fileNum + 1) + ".pdf");
     pdf.beginDraw();
 
+    pdf.colorMode(HSB, 360, 100, 100, 1);
     pdf.noStroke();
     pdf.blendMode(blending);
+
+    pdf.fill(0, 0, 0, 0);
+    pdf.rect(0, 0, 600, 600);
+
     for (int k = 0; k < repetitions; k++) {
       pdf.fill(colors1[k], alpha);
       pdf.triangle(300, 300, 300 + vectors1[k].x, 300 + vectors1[k].y, 300 + vectors3[k].x, 300 + vectors3[k].y);
@@ -338,12 +356,42 @@ void export_pdf() {
 
     fileNum++;
     if (num > 1) {
+
+      if (turnHue) {
+        minHue1 += stepSize;
+        if (minHue1 > 360) minHue1 -= 360;
+        maxHue1 += stepSize;
+        if (maxHue1 > 360) maxHue1 -= 360;
+        minHue2 += stepSize;
+        if (minHue2 > 360) minHue2 -= 360;
+        maxHue2 += stepSize;
+        if (minHue2 > 360) minHue2 -= 360;
+      }
+
       randomizeVectors();
     }
   }
 }
 
+void export_pdf() {
+  drawPdf(false);
+}
+
+void export_pdf_turn_hue() {
+  drawPdf(true);
+}
+
 void export_svg() {
+    drawSvg(true);
+}
+
+void export_svg_turn_hue() {
+    drawSvg(true);
+}
+
+void drawSvg(boolean turnHue) {
+
+  float stepSize = 360/ num;
   for (int i = 0; i < num; i++) {
 
     StringBuffer sb = new StringBuffer();
@@ -372,6 +420,18 @@ void export_svg() {
 
     fileNum++;
     if (num > 1) {
+
+      if (turnHue) {
+        minHue1 += stepSize;
+        if (minHue1 > 360) minHue1 -= 360;
+        maxHue1 += stepSize;
+        if (maxHue1 > 360) maxHue1 -= 360;
+        minHue2 += stepSize;
+        if (minHue2 > 360) minHue2 -= 360;
+        maxHue2 += stepSize;
+        if (minHue2 > 360) minHue2 -= 360;
+      }
+
       randomizeVectors();
     }
   }
@@ -393,16 +453,36 @@ void randomizeVectors() {
     vectors2[k] = vector2;
     vectors3[k] = PVector.add(vector1, vector2);
 
+    float rhue1 = 0;
+    if (minHue1 > maxHue1) {
+      float range = 360 - minHue1 + maxHue1;
+      float rv = random(0, range);
+      rhue1 = minHue1 + rv;
+      if (rhue1 > 360) rhue1 -= 360;
+    } else {
+      rhue1 = random(minHue1, maxHue1);
+    }
+
+    float rhue2 = 0;
+    if (minHue2 > maxHue2) {
+      float range = 360 - minHue2 + maxHue2;
+      float rv = random(0, range);
+      rhue2 = minHue2 + rv;
+      if (rhue2 > 360) rhue2 -= 360;
+    } else {
+      rhue2 = random(minHue2, maxHue2);
+    }
+
     colors1[k] = color(
-      random(minHue1, maxHue1),
-      random(minSaturation1, maxSaturation1),
-      random(minBrightness1, maxBrightness1),
-      alpha);
+    rhue1, 
+    random(minSaturation1, maxSaturation1), 
+    random(minBrightness1, maxBrightness1), 
+    alpha);
     colors2[k] = color(
-      random(minHue2, maxHue2),
-      random(minSaturation2, maxSaturation2),
-      random(minBrightness2, maxBrightness2),
-      alpha);
+    rhue2, 
+    random(minSaturation2, maxSaturation2), 
+    random(minBrightness2, maxBrightness2), 
+    alpha);
   }
 }
 
