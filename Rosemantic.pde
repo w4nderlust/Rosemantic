@@ -5,7 +5,7 @@ ControlP5 cp5;
 
 public color backgroundColor = color(0);
 
-public PVector origin = new PVector(780, 350);
+public PVector origin = new PVector(660, 350);
 
 public boolean recordPDF = false;
 public int fileNum = 0;
@@ -43,13 +43,13 @@ public PVector[] vectors3 = new PVector[repetitions];
 
 /*
 public float red1 = 0;
- public float green1 = 0;
- public float blue1 = 0;
+public float green1 = 0;
+public float blue1 = 0;
  
- public float red2 = 0;
- public float green2 = 0;
- public float blue2 = 0;
- */
+public float red2 = 0;
+public float green2 = 0;
+public float blue2 = 0;
+*/
 
 public color[] colors1 = new color[repetitions];
 public color[] colors2 = new color[repetitions];
@@ -59,7 +59,7 @@ public float alpha = 255;
 public int blending = BLEND;
 
 void setup() {
-  size(1200, 700, OPENGL);
+  size(960, 700, OPENGL);
   background(backgroundColor);
 
   cp5 = new ControlP5(this);
@@ -296,11 +296,11 @@ void controlEvent(ControlEvent event) {
 }
 
 void load() {
-  cp5.loadProperties(("parameters.properties"));
+  cp5.loadProperties(("parameters"));
 }
 
 void save() {
-  cp5.saveProperties(("parameters.properties"));
+  cp5.saveProperties(("parameters"));
 }
 
 void repetitions(int number) {
