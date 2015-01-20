@@ -3,9 +3,12 @@ import controlP5.*;
 
 ControlP5 cp5;
 
+
+public float golden_ratio_conjugate = 0.618033988749895;
+
 public color backgroundColor = color(0);
 
-public PVector origin = new PVector(660, 350);
+public PVector origin = new PVector(680, 350);
 
 public boolean recordPDF = false;
 public int fileNum = 0;
@@ -23,43 +26,34 @@ public float maxRay = 150;
 public float minAngle = 0;
 public float maxAngle = 180;
 
-public float minRed1 = 0;
-public float maxRed1 = 255;
-public float minGreen1 = 0;
-public float maxGreen1 = 255;
-public float minBlue1 = 0;
-public float maxBlue1 = 255;
+public float minHue1 = 0;
+public float maxHue1 = 360;
+public float minSaturation1 = 0;
+public float maxSaturation1 = 100;
+public float minBrightness1 = 0;
+public float maxBrightness1 = 100;
 
-public float minRed2 = 0;
-public float maxRed2 = 255;
-public float minGreen2 = 0;
-public float maxGreen2 = 255;
-public float minBlue2 = 0;
-public float maxBlue2 = 255;
+public float minHue2 = 0;
+public float maxHue2 = 360;
+public float minSaturation2 = 0;
+public float maxSaturation2 = 100;
+public float minBrightness2 = 0;
+public float maxBrightness2 = 100;
 
 public PVector[] vectors1 = new PVector[repetitions];
 public PVector[] vectors2 = new PVector[repetitions];
 public PVector[] vectors3 = new PVector[repetitions];
 
-/*
-public float red1 = 0;
-public float green1 = 0;
-public float blue1 = 0;
- 
-public float red2 = 0;
-public float green2 = 0;
-public float blue2 = 0;
-*/
-
 public color[] colors1 = new color[repetitions];
 public color[] colors2 = new color[repetitions];
 
-public float alpha = 255;
+public float alpha = 1;
 
 public int blending = BLEND;
 
 void setup() {
-  size(960, 700, OPENGL);
+  size(980, 700, OPENGL);
+  colorMode(HSB, 360, 100, 100, 1);
   background(backgroundColor);
 
   cp5 = new ControlP5(this);
@@ -107,74 +101,74 @@ void setup() {
                 .setBroadcast(true)
                   ;
 
-  Range rangeRed1 = cp5.addRange("red1")
+  Range rangeRed1 = cp5.addRange("hue1")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 120)
         .setSize(300, 15)
           .setHandleSize(20)
-            .setRange(0, 255)
-              .setRangeValues(0, 255)
+            .setRange(minHue1, maxHue1)
+              .setRangeValues(minHue1, maxHue1)
                 // after the initialization we turn broadcast back on again
                 .setBroadcast(true)
                   ;
 
-  Range rangeGreen1 = cp5.addRange("green1")
+  Range rangeGreen1 = cp5.addRange("saturation1")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 140)
         .setSize(300, 15)
           .setHandleSize(20)
-            .setRange(0, 255)
-              .setRangeValues(0, 255)
+            .setRange(minSaturation1, maxSaturation1)
+              .setRangeValues(minSaturation1, maxSaturation1)
                 // after the initialization we turn broadcast back on again
                 .setBroadcast(true)
                   ;
 
-  Range rangeBlue1 = cp5.addRange("blue1")
+  Range rangeBlue1 = cp5.addRange("brightness1")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 160)
         .setSize(300, 15)
           .setHandleSize(20)
-            .setRange(0, 255)
-              .setRangeValues(0, 255)
+            .setRange(minBrightness1, maxBrightness1)
+              .setRangeValues(minBrightness1, maxBrightness1)
                 // after the initialization we turn broadcast back on again
                 .setBroadcast(true)
                   ;
 
-  Range rangeRed2 = cp5.addRange("red2")
+  Range rangeRed2 = cp5.addRange("hue2")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 190)
         .setSize(300, 15)
           .setHandleSize(20)
-            .setRange(0, 255)
-              .setRangeValues(0, 255)
+            .setRange(minHue2, maxHue2)
+              .setRangeValues(minHue2, maxHue2)
                 // after the initialization we turn broadcast back on again
                 .setBroadcast(true)
                   ;
 
-  Range rangeGreen2 = cp5.addRange("green2")
+  Range rangeGreen2 = cp5.addRange("saturation2")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 210)
         .setSize(300, 15)
           .setHandleSize(20)
-            .setRange(0, 255)
-              .setRangeValues(0, 255)
+            .setRange(minSaturation2, maxSaturation2)
+              .setRangeValues(minSaturation2, maxSaturation2)
                 // after the initialization we turn broadcast back on again
                 .setBroadcast(true)
                   ;
 
-  Range rangeBlue2 = cp5.addRange("blue2")
+  Range rangeBlue2 = cp5.addRange("brightness2")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 230)
         .setSize(300, 15)
           .setHandleSize(20)
-            .setRange(0, 255)
-              .setRangeValues(0, 255)
+            .setRange(minBrightness2, maxBrightness2)
+              .setRangeValues(minBrightness2, maxBrightness2)
                 // after the initialization we turn broadcast back on again
                 .setBroadcast(true)
                   ;
@@ -247,8 +241,8 @@ void setup() {
 
 void draw() {
   background(backgroundColor);
-  fill(color(30, 30, 30));
-  rect(0, 0, 360, 700);
+  fill(color(0, 0, 25));
+  rect(0, 0, 380, 700);
   if (shouldRandomize) {
     randomizeVectors();
     shouldRandomize = false;
@@ -266,24 +260,24 @@ void controlEvent(ControlEvent event) {
   } else if (event.isFrom("angle")) {
     minAngle = int(event.getController().getArrayValue(0));
     maxAngle = int(event.getController().getArrayValue(1));
-  } else if (event.isFrom("red1")) {
-    minRed1 = int(event.getController().getArrayValue(0));
-    maxRed1 = int(event.getController().getArrayValue(1));
-  } else if (event.isFrom("green1")) {
-    minGreen1 = int(event.getController().getArrayValue(0));
-    maxGreen1 = int(event.getController().getArrayValue(1));
-  } else if (event.isFrom("blue1")) {
-    minBlue1 = int(event.getController().getArrayValue(0));
-    maxBlue1 = int(event.getController().getArrayValue(1));
-  } else if (event.isFrom("red2")) {
-    minRed2 = int(event.getController().getArrayValue(0));
-    maxRed2 = int(event.getController().getArrayValue(1));
-  } else if (event.isFrom("green2")) {
-    minGreen2 = int(event.getController().getArrayValue(0));
-    maxGreen2 = int(event.getController().getArrayValue(1));
-  } else if (event.isFrom("blue2")) {
-    minBlue2 = int(event.getController().getArrayValue(0));
-    maxBlue2 = int(event.getController().getArrayValue(1));
+  } else if (event.isFrom("hue1")) {
+    minHue1 = int(event.getController().getArrayValue(0));
+    maxHue1 = int(event.getController().getArrayValue(1));
+  } else if (event.isFrom("saturation1")) {
+    minSaturation1 = int(event.getController().getArrayValue(0));
+    maxSaturation1 = int(event.getController().getArrayValue(1));
+  } else if (event.isFrom("brightness1")) {
+    minBrightness1 = int(event.getController().getArrayValue(0));
+    maxBrightness1 = int(event.getController().getArrayValue(1));
+  } else if (event.isFrom("hue2")) {
+    minHue2 = int(event.getController().getArrayValue(0));
+    maxHue2 = int(event.getController().getArrayValue(1));
+  } else if (event.isFrom("saturation2")) {
+    minSaturation2 = int(event.getController().getArrayValue(0));
+    maxSaturation2 = int(event.getController().getArrayValue(1));
+  } else if (event.isFrom("brightness2")) {
+    minBrightness2 = int(event.getController().getArrayValue(0));
+    maxBrightness2 = int(event.getController().getArrayValue(1));
   } else if (event.isFrom("background")) {
     int r = int(event.getArrayValue(0));
     int g = int(event.getArrayValue(1));
@@ -308,7 +302,7 @@ void repetitions(int number) {
 }
 
 void alpha(float number) {
-  alpha = map(number, 0.0, 1.0, 0, 255);
+  alpha = number;
 }
 
 void randomize() {
@@ -360,13 +354,13 @@ void export_svg() {
       sb.append(
       "  <polygon points=\"300,300 " + (300 + vectors1[k].x) + "," + (300 + vectors1[k].y) + " " + (300 + vectors3[k].x) + "," + (300 + vectors3[k].y)
         + "\" fill=\"#" + hex(colors1[k], 6) + "\" "
-        + "style=\"opacity:" + map(alpha, 0, 255, 0, 1) + "\""
+        + "style=\"opacity:" + alpha + "\""
         + "/>" + "\n"
         );
       sb.append(
       "  <polygon points=\"300,300 " + (300 + vectors2[k].x) + "," + (300 + vectors2[k].y) + " " + (300 + vectors3[k].x) + "," + (300 + vectors3[k].y)
         + "\" fill=\"#" + hex(colors2[k], 6) + "\" "
-        + "style=\"opacity:" + map(alpha, 0, 255, 0, 1) + "\""
+        + "style=\"opacity:" + alpha + "\""
         + "/>" + "\n"
         );
     }
@@ -399,15 +393,16 @@ void randomizeVectors() {
     vectors2[k] = vector2;
     vectors3[k] = PVector.add(vector1, vector2);
 
-    //red1 = random(minRed1, maxRed1);
-    //green1 = random(minGreen1, maxGreen1);
-    //blue1 = random(minBlue1, maxBlue1);
-    colors1[k] = color(random(minRed1, maxRed1), random(minGreen1, maxGreen1), random(minBlue1, maxBlue1));
-
-    //red2 = random(minRed2, maxRed2);
-    //green2 = random(minGreen2, maxGreen2);
-    //blue2 = random(minBlue2, maxBlue2);
-    colors2[k] = color(random(minRed2, maxRed2), random(minGreen2, maxGreen2), random(minBlue2, maxBlue2));
+    colors1[k] = color(
+      random(minHue1, maxHue1),
+      random(minSaturation1, maxSaturation1),
+      random(minBrightness1, maxBrightness1),
+      alpha);
+    colors2[k] = color(
+      random(minHue2, maxHue2),
+      random(minSaturation2, maxSaturation2),
+      random(minBrightness2, maxBrightness2),
+      alpha);
   }
 }
 
@@ -415,13 +410,15 @@ void drawVectors() {
   noStroke();
   blendMode(blending);
   for (int k = 0; k < repetitions; k++) {
-    //fill(red1, green1, blue1, alpha);
     fill(colors1[k], alpha);
     triangle(origin.x, origin.y, origin.x + vectors1[k].x, origin.y + vectors1[k].y, origin.x + vectors3[k].x, origin.y + vectors3[k].y);
-    //fill(red2, green2, blue2, alpha);
     fill(colors2[k], alpha);
     triangle(origin.x, origin.y, origin.x + vectors2[k].x, origin.y + vectors2[k].y, origin.x + vectors3[k].x, origin.y + vectors3[k].y);
   }
   blendMode(BLEND);
+}
+
+float gold_ratio(float rand) {
+  return (rand + golden_ratio_conjugate) % 1;
 }
 
