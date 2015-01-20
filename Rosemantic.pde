@@ -2,6 +2,7 @@ import processing.pdf.*;
 import controlP5.*;
 
 ControlP5 cp5;
+
 public color backgroundColor = color(0);
 
 public PVector origin = new PVector(780, 350);
@@ -9,7 +10,7 @@ public PVector origin = new PVector(780, 350);
 public boolean recordPDF = false;
 public int fileNum = 0;
 public String fileName = "rose";
-public int numPdf = 1;
+public int num = 1;
 
 public boolean shouldRandomize = false;
 
@@ -58,29 +59,34 @@ public float alpha = 255;
 public int blending = BLEND;
 
 void setup() {
-  size(1200, 700);
+  size(1200, 700, OPENGL);
   background(backgroundColor);
 
   cp5 = new ControlP5(this);
 
-  // create a slider
-  // parameters:
-  // name, minValue, maxValue, defaultValue, x, y, width, height
-  //cp5.addSlider("sliderA", 100, 200, 100, 100, 260, 100, 14);
+  Button buttonLoad = cp5.addButton("load")
+    .setPosition(10, 10)
+      .setSize(140, 20)
+        ;
+  buttonLoad.getCaptionLabel().align( CENTER, CENTER);
+
+  Button buttonSave = cp5.addButton("save")
+    .setPosition(170, 10)
+      .setSize(140, 20)
+        ;
+  buttonSave.getCaptionLabel().align( CENTER, CENTER);
 
   Slider sliderRepetitions = cp5.addSlider("repetitions")
-    .setPosition(10, 10)
+    .setPosition(10, 50)
       .setSize(300, 15)
         .setRange(1, 100)
           .setValue(50)
             ;
 
-  //repetitions.getCaptionLabel().align(ControlP5.RIGHT_OUTSIDE, ControlP5.CENTER).setPaddingX(5);
-
   Range rangeRay = cp5.addRange("ray")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
-      .setPosition(10, 30)
+      .setPosition(10, 70)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minRay, maxRay)
@@ -92,7 +98,7 @@ void setup() {
   Range range = cp5.addRange("angle")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
-      .setPosition(10, 50)
+      .setPosition(10, 90)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minAngle, maxAngle)
@@ -104,7 +110,7 @@ void setup() {
   Range rangeRed1 = cp5.addRange("red1")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
-      .setPosition(10, 80)
+      .setPosition(10, 120)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(0, 255)
@@ -116,7 +122,7 @@ void setup() {
   Range rangeGreen1 = cp5.addRange("green1")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
-      .setPosition(10, 100)
+      .setPosition(10, 140)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(0, 255)
@@ -128,7 +134,7 @@ void setup() {
   Range rangeBlue1 = cp5.addRange("blue1")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
-      .setPosition(10, 120)
+      .setPosition(10, 160)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(0, 255)
@@ -140,7 +146,7 @@ void setup() {
   Range rangeRed2 = cp5.addRange("red2")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
-      .setPosition(10, 150)
+      .setPosition(10, 190)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(0, 255)
@@ -152,7 +158,7 @@ void setup() {
   Range rangeGreen2 = cp5.addRange("green2")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
-      .setPosition(10, 170)
+      .setPosition(10, 210)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(0, 255)
@@ -164,7 +170,7 @@ void setup() {
   Range rangeBlue2 = cp5.addRange("blue2")
     // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
-      .setPosition(10, 190)
+      .setPosition(10, 230)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(0, 255)
@@ -174,14 +180,14 @@ void setup() {
                   ;
 
   Slider sliderAlpha = cp5.addSlider("alpha")
-    .setPosition(10, 220)
+    .setPosition(10, 260)
       .setSize(300, 15)
         .setRange(0, 1)
           .setValue(1)
             ;
 
   DropdownList dropdownBlending = cp5.addDropdownList("blending")
-    .setPosition(10, 260)
+    .setPosition(10, 300)
       .setSize(300, 165)
         .setItemHeight(15)
           .setBarHeight(15)
@@ -195,30 +201,36 @@ void setup() {
   dropdownBlending.addItem("SUBTRACT", SUBTRACT);
   dropdownBlending.addItem("DARKEST", DARKEST);
   dropdownBlending.addItem("LIGHTEST", LIGHTEST);
-  dropdownBlending.addItem("DIFFERENCE", DIFFERENCE);
+  //dropdownBlending.addItem("DIFFERENCE", DIFFERENCE);
   dropdownBlending.addItem("EXCLUSION", EXCLUSION);
   dropdownBlending.addItem("MULTIPLY", MULTIPLY);
   dropdownBlending.addItem("SCREEN", SCREEN);
   dropdownBlending.addItem("REPLACE", REPLACE);
 
   Button buttonRandomize = cp5.addButton("randomize")
-    .setPosition(10, 450)
-      .setSize(130, 40)
+    .setPosition(10, 465)
+      .setSize(140, 70)
         ;
-  buttonRandomize.getCaptionLabel().align( CENTER, CENTER);
+  buttonRandomize.getCaptionLabel().align(CENTER, CENTER);
 
-  Slider sliderNumPdf = cp5.addSlider("num_pdf")
-    .setPosition(170, 450)
-      .setSize(130, 20)
+  Slider sliderNum = cp5.addSlider("num")
+    .setPosition(170, 465)
+      .setSize(140, 20)
         .setRange(1, 100)
           .setValue(1)
             ;
 
   Button buttonPdf = cp5.addButton("export_pdf")
-    .setPosition(170, 470)
-      .setSize(130, 20)
+    .setPosition(170, 490)
+      .setSize(140, 20)
         ;
   buttonPdf.getCaptionLabel().align( CENTER, CENTER);
+
+  Button buttonSvg = cp5.addButton("export_svg")
+    .setPosition(170, 515)
+      .setSize(140, 20)
+        ;
+  buttonSvg.getCaptionLabel().align( CENTER, CENTER);
 
   Textlabel labelBackground = cp5.addTextlabel("label")
     .setText("BACKGROUND COLOR")
@@ -243,12 +255,6 @@ void draw() {
   }
   drawVectors();
 }
-
-// an event from slider sliderA will change the value of textfield textA here
-/*public void sliderA(int theValue) {
- Textfield txt = ((Textfield)cp5.getController("textA"));
- txt.setValue(""+theValue);
- }*/
 
 void controlEvent(ControlEvent event) {
   // min and max values are stored in an array.
@@ -289,6 +295,14 @@ void controlEvent(ControlEvent event) {
   }
 }
 
+void load() {
+  cp5.loadProperties(("parameters.properties"));
+}
+
+void save() {
+  cp5.saveProperties(("parameters.properties"));
+}
+
 void repetitions(int number) {
   actualSelectedRepetitions = number;
 }
@@ -307,12 +321,12 @@ void randomize() {
   repetitions = actualSelectedRepetitions;
 }
 
-void num_pdf(int number) {
-  numPdf =  number;
+void num(int number) {
+  num =  number;
 }
 
 void export_pdf() {
-  for (int i = 0; i < numPdf; i++) {
+  for (int i = 0; i < num; i++) {
     PGraphics pdf = createGraphics(600, 600, PDF, fileName + "-" + (fileNum + 1) + ".pdf");
     pdf.beginDraw();
 
@@ -329,7 +343,41 @@ void export_pdf() {
     pdf.endDraw();
 
     fileNum++;
-    if (numPdf > 1) {
+    if (num > 1) {
+      randomizeVectors();
+    }
+  }
+}
+
+void export_svg() {
+  for (int i = 0; i < num; i++) {
+
+    StringBuffer sb = new StringBuffer();
+    sb.append("<?xml version=\"1.0\" standalone=\"no\"?>\n");
+    sb.append("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
+    sb.append("<svg viewBox=\"0 0 600 600\" xmlns=\"http://www.w3.org/2000/svg\" version =\"1.1\">\n");
+    for (int k = 0; k < repetitions; k++) {
+      sb.append(
+      "  <polygon points=\"300,300 " + (300 + vectors1[k].x) + "," + (300 + vectors1[k].y) + " " + (300 + vectors3[k].x) + "," + (300 + vectors3[k].y)
+        + "\" fill=\"#" + hex(colors1[k], 6) + "\" "
+        + "style=\"opacity:" + map(alpha, 0, 255, 0, 1) + "\""
+        + "/>" + "\n"
+        );
+      sb.append(
+      "  <polygon points=\"300,300 " + (300 + vectors2[k].x) + "," + (300 + vectors2[k].y) + " " + (300 + vectors3[k].x) + "," + (300 + vectors3[k].y)
+        + "\" fill=\"#" + hex(colors2[k], 6) + "\" "
+        + "style=\"opacity:" + map(alpha, 0, 255, 0, 1) + "\""
+        + "/>" + "\n"
+        );
+    }
+    sb.append("</svg>\n");
+
+    String[] lines = new String[1];
+    lines[0] = sb.toString();
+    saveStrings(fileName + "-" + (fileNum + 1) + ".svg", lines);
+
+    fileNum++;
+    if (num > 1) {
       randomizeVectors();
     }
   }
