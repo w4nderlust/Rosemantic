@@ -1,14 +1,10 @@
 import processing.pdf.*;
 import controlP5.*;
 
-ControlP5 cp5;
-
-
-public float golden_ratio_conjugate = 0.618033988749895;
-
-public color backgroundColor = color(0);
+public ControlP5 cp5;
 
 public PVector origin = new PVector(680, 350);
+public color backgroundColor = color(0, 0, 0);
 
 public boolean recordPDF = false;
 public int fileNum = 0;
@@ -60,133 +56,104 @@ void setup() {
 
   Button buttonLoad = cp5.addButton("load")
     .setPosition(10, 10)
-      .setSize(140, 20)
-        ;
+      .setSize(140, 20);
   buttonLoad.getCaptionLabel().align( CENTER, CENTER);
 
   Button buttonSave = cp5.addButton("save")
     .setPosition(170, 10)
-      .setSize(140, 20)
-        ;
+      .setSize(140, 20);
   buttonSave.getCaptionLabel().align( CENTER, CENTER);
 
   Slider sliderRepetitions = cp5.addSlider("repetitions")
     .setPosition(10, 50)
       .setSize(300, 15)
         .setRange(1, 100)
-          .setValue(50)
-            ;
+          .setValue(50);
 
   Range rangeRay = cp5.addRange("ray")
-    // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 70)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minRay, maxRay)
               .setRangeValues(minRay, maxRay)
-                // after the initialization we turn broadcast back on again
-                .setBroadcast(true)
-                  ;
+                .setBroadcast(true);
 
   Range range = cp5.addRange("angle")
-    // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 90)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minAngle, maxAngle)
               .setRangeValues(minAngle, maxAngle)
-                // after the initialization we turn broadcast back on again
-                .setBroadcast(true)
-                  ;
+                .setBroadcast(true);
 
   Range rangeRed1 = cp5.addRange("hue1")
-    // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 120)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minHue1, maxHue1)
               .setRangeValues(minHue1, maxHue1)
-                // after the initialization we turn broadcast back on again
-                .setBroadcast(true)
-                  ;
+                .setBroadcast(true);
 
   Range rangeGreen1 = cp5.addRange("saturation1")
-    // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 140)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minSaturation1, maxSaturation1)
               .setRangeValues(minSaturation1, maxSaturation1)
-                // after the initialization we turn broadcast back on again
-                .setBroadcast(true)
-                  ;
+                .setBroadcast(true);
 
   Range rangeBlue1 = cp5.addRange("brightness1")
-    // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 160)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minBrightness1, maxBrightness1)
               .setRangeValues(minBrightness1, maxBrightness1)
-                // after the initialization we turn broadcast back on again
-                .setBroadcast(true)
-                  ;
+                .setBroadcast(true);
 
   Range rangeRed2 = cp5.addRange("hue2")
-    // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 190)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minHue2, maxHue2)
               .setRangeValues(minHue2, maxHue2)
-                // after the initialization we turn broadcast back on again
-                .setBroadcast(true)
-                  ;
+                .setBroadcast(true);
 
   Range rangeGreen2 = cp5.addRange("saturation2")
-    // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 210)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minSaturation2, maxSaturation2)
               .setRangeValues(minSaturation2, maxSaturation2)
-                // after the initialization we turn broadcast back on again
-                .setBroadcast(true)
-                  ;
+                .setBroadcast(true);
 
   Range rangeBlue2 = cp5.addRange("brightness2")
-    // disable broadcasting since setRange and setRangeValues will trigger an event
     .setBroadcast(false) 
       .setPosition(10, 230)
         .setSize(300, 15)
           .setHandleSize(20)
             .setRange(minBrightness2, maxBrightness2)
               .setRangeValues(minBrightness2, maxBrightness2)
-                // after the initialization we turn broadcast back on again
-                .setBroadcast(true)
-                  ;
+                .setBroadcast(true);
 
   Slider sliderAlpha = cp5.addSlider("alpha")
     .setPosition(10, 260)
       .setSize(300, 15)
         .setRange(0, 1)
-          .setValue(1)
-            ;
+          .setValue(1);
 
   DropdownList dropdownBlending = cp5.addDropdownList("blending")
     .setPosition(10, 300)
       .setSize(300, 165)
         .setItemHeight(15)
           .setBarHeight(15)
-            .actAsPulldownMenu(true)
-              ;
+            .actAsPulldownMenu(true);
 
   dropdownBlending.setIndex(0);
 
@@ -203,49 +170,41 @@ void setup() {
 
   Button buttonRandomize = cp5.addButton("randomize")
     .setPosition(10, 465)
-      .setSize(140, 120)
-        ;
+      .setSize(140, 120);
   buttonRandomize.getCaptionLabel().align(CENTER, CENTER);
 
   Slider sliderNum = cp5.addSlider("num")
     .setPosition(170, 465)
       .setSize(140, 20)
         .setRange(1, 100)
-          .setValue(1)
-            ;
+          .setValue(1);
 
   Button buttonPdf = cp5.addButton("export_pdf")
     .setPosition(170, 490)
-      .setSize(140, 20)
-        ;
+      .setSize(140, 20);
   buttonPdf.getCaptionLabel().align( CENTER, CENTER);
 
   Button buttonPdf2 = cp5.addButton("export_pdf_cycle_hue")
     .setPosition(170, 515)
-      .setSize(140, 20)
-        ;
+      .setSize(140, 20);
   buttonPdf2.getCaptionLabel().align( CENTER, CENTER);
 
   Button buttonSvg = cp5.addButton("export_svg")
     .setPosition(170, 540)
-      .setSize(140, 20)
-        ;
+      .setSize(140, 20);
   buttonSvg.getCaptionLabel().align( CENTER, CENTER);
 
   Button buttonSvg2 = cp5.addButton("export_svg_cycle_hue")
     .setPosition(170, 565)
-      .setSize(140, 20)
-        ;
+      .setSize(140, 20);
   buttonSvg2.getCaptionLabel().align( CENTER, CENTER);
 
   Toggle toggleBackground = cp5.addToggle("background")
     .setPosition(10, 680)
       .setSize(300, 15)
         .setValue(true)
-          .setMode(ControlP5.SWITCH)
-            .setValueLabel("prova")
-              ;
-  toggleBackground.getCaptionLabel().align( ControlP5.RIGHT_OUTSIDE, CENTER);
+          .setMode(ControlP5.SWITCH);
+  toggleBackground.getCaptionLabel().align(ControlP5.RIGHT_OUTSIDE, CENTER);
   toggleBackground.captionLabel().style().marginLeft = 5;
 
   randomize();
@@ -256,16 +215,16 @@ void draw() {
   background(backgroundColor);
   fill(color(0, 0, 25));
   rect(0, 0, 380, 700);
-  
+
   fill(color(0, 0, 0));
-    rect(10, 675, 150, 5);
-    
-    fill(color(0, 0, 100));
-    rect(160, 675, 150, 5);
-    
+  rect(10, 675, 150, 5);
+
+  fill(color(0, 0, 100));
+  rect(160, 675, 150, 5);
+
   paintGradient(10, 115, 300, 5);
-    paintGradient(10, 185, 300, 5);
-  
+  paintGradient(10, 185, 300, 5);
+
   if (shouldRandomize) {
     randomizeVectors();
     shouldRandomize = false;
@@ -366,8 +325,8 @@ void num(int number) {
 }
 
 void drawPdf(boolean turnHue) {
+  float stepSize = 360 / (float)num;
 
-  float stepSize = 360/ num;
   for (int i = 0; i < num; i++) {
     PGraphics pdf = createGraphics(600, 600, PDF, fileName + "-" + (fileNum + 1) + ".pdf");
     pdf.beginDraw();
@@ -393,19 +352,14 @@ void drawPdf(boolean turnHue) {
     if (num > 1) {
 
       if (turnHue) {
-        minHue1 += stepSize;
-        if (minHue1 > 360) minHue1 -= 360;
-        maxHue1 += stepSize;
-        if (maxHue1 > 360) maxHue1 -= 360;
-        minHue2 += stepSize;
-        if (minHue2 > 360) minHue2 -= 360;
-        maxHue2 += stepSize;
-        if (minHue2 > 360) minHue2 -= 360;
+        turnHue(stepSize);
       }
 
       randomizeVectors();
     }
   }
+
+  randomize();
 }
 
 void export_pdf() {
@@ -425,8 +379,8 @@ void export_svg_cycle_hue() {
 }
 
 void drawSvg(boolean turnHue) {
+  float stepSize = 360 / (float)num;
 
-  float stepSize = 360/ num;
   for (int i = 0; i < num; i++) {
 
     StringBuffer sb = new StringBuffer();
@@ -457,25 +411,30 @@ void drawSvg(boolean turnHue) {
     if (num > 1) {
 
       if (turnHue) {
-        minHue1 += stepSize;
-        if (minHue1 > 360) minHue1 -= 360;
-        maxHue1 += stepSize;
-        if (maxHue1 > 360) maxHue1 -= 360;
-        minHue2 += stepSize;
-        if (minHue2 > 360) minHue2 -= 360;
-        maxHue2 += stepSize;
-        if (minHue2 > 360) minHue2 -= 360;
+        turnHue(stepSize);
       }
 
       randomizeVectors();
     }
   }
+
+  randomize();
+}
+
+void turnHue(float stepSize) {
+  minHue1 += stepSize;
+  if (minHue1 > 360) minHue1 -= 360;
+  maxHue1 += stepSize;
+  if (maxHue1 > 360) maxHue1 -= 360;
+  minHue2 += stepSize;
+  if (minHue2 > 360) minHue2 -= 360;
+  maxHue2 += stepSize;
+  if (minHue2 > 360) minHue2 -= 360;
 }
 
 void randomizeVectors() {
   for (int k = 0; k < repetitions; k++) {
 
-    // set vecto1 (x1, y1)
     float angle1 = random(0, 360);
     PVector vector1 = PVector.fromAngle(radians(angle1));
     vector1.setMag(random(minRay, maxRay));
