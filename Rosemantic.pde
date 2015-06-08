@@ -6,7 +6,6 @@ public ControlP5 cp5;
 public PVector origin = new PVector(680, 350);
 public color backgroundColor = color(0, 0, 0);
 
-public boolean recordPDF = false;
 public int fileNum = 0;
 public String fileName = "rose";
 public int num = 1;
@@ -64,13 +63,13 @@ void setup() {
       .setSize(140, 20);
   buttonSave.getCaptionLabel().align( CENTER, CENTER);
 
-  Slider sliderRepetitions = cp5.addSlider("repetitions")
+  cp5.addSlider("repetitions")
     .setPosition(10, 50)
       .setSize(300, 15)
         .setRange(1, 100)
           .setValue(50);
 
-  Range rangeRay = cp5.addRange("ray")
+  cp5.addRange("ray")
     .setBroadcast(false) 
       .setPosition(10, 70)
         .setSize(300, 15)
@@ -79,7 +78,7 @@ void setup() {
               .setRangeValues(minRay, maxRay)
                 .setBroadcast(true);
 
-  Range range = cp5.addRange("angle")
+  cp5.addRange("angle")
     .setBroadcast(false) 
       .setPosition(10, 90)
         .setSize(300, 15)
@@ -88,7 +87,7 @@ void setup() {
               .setRangeValues(minAngle, maxAngle)
                 .setBroadcast(true);
 
-  Range rangeRed1 = cp5.addRange("hue1")
+  cp5.addRange("hue1")
     .setBroadcast(false) 
       .setPosition(10, 120)
         .setSize(300, 15)
@@ -97,7 +96,7 @@ void setup() {
               .setRangeValues(minHue1, maxHue1)
                 .setBroadcast(true);
 
-  Range rangeGreen1 = cp5.addRange("saturation1")
+  cp5.addRange("saturation1")
     .setBroadcast(false) 
       .setPosition(10, 140)
         .setSize(300, 15)
@@ -106,7 +105,7 @@ void setup() {
               .setRangeValues(minSaturation1, maxSaturation1)
                 .setBroadcast(true);
 
-  Range rangeBlue1 = cp5.addRange("brightness1")
+  cp5.addRange("brightness1")
     .setBroadcast(false) 
       .setPosition(10, 160)
         .setSize(300, 15)
@@ -115,7 +114,7 @@ void setup() {
               .setRangeValues(minBrightness1, maxBrightness1)
                 .setBroadcast(true);
 
-  Range rangeRed2 = cp5.addRange("hue2")
+  cp5.addRange("hue2")
     .setBroadcast(false) 
       .setPosition(10, 190)
         .setSize(300, 15)
@@ -124,7 +123,7 @@ void setup() {
               .setRangeValues(minHue2, maxHue2)
                 .setBroadcast(true);
 
-  Range rangeGreen2 = cp5.addRange("saturation2")
+  cp5.addRange("saturation2")
     .setBroadcast(false) 
       .setPosition(10, 210)
         .setSize(300, 15)
@@ -133,7 +132,7 @@ void setup() {
               .setRangeValues(minSaturation2, maxSaturation2)
                 .setBroadcast(true);
 
-  Range rangeBlue2 = cp5.addRange("brightness2")
+  cp5.addRange("brightness2")
     .setBroadcast(false) 
       .setPosition(10, 230)
         .setSize(300, 15)
@@ -142,7 +141,7 @@ void setup() {
               .setRangeValues(minBrightness2, maxBrightness2)
                 .setBroadcast(true);
 
-  Slider sliderAlpha = cp5.addSlider("alpha")
+  cp5.addSlider("alpha")
     .setPosition(10, 260)
       .setSize(300, 15)
         .setRange(0, 1)
@@ -154,9 +153,7 @@ void setup() {
         .setItemHeight(15)
           .setBarHeight(15)
             .actAsPulldownMenu(true);
-
   dropdownBlending.setIndex(0);
-
   dropdownBlending.addItem("BLEND", BLEND);
   dropdownBlending.addItem("ADD", ADD);
   dropdownBlending.addItem("SUBTRACT", SUBTRACT);
@@ -173,7 +170,7 @@ void setup() {
       .setSize(140, 120);
   buttonRandomize.getCaptionLabel().align(CENTER, CENTER);
 
-  Slider sliderNum = cp5.addSlider("num")
+  cp5.addSlider("num")
     .setPosition(170, 465)
       .setSize(140, 20)
         .setRange(1, 100)
