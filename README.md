@@ -19,9 +19,12 @@ The final shapes can be exported in PDF or SVG in bulk, also cycling the hue mar
 
 
 ## Examples
+
 Here are some example shapes generated with the example parameters available.
 
 ![Roses](http://i.imgur.com/b2RZ3HD.png)
+
+You can load the .ser (parameters file) files included to see how parameter tuning influences the generated shapes.
 
 ## Notes
 
