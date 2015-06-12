@@ -31,4 +31,5 @@ You can load the .ser (parameters file) files included to see how parameter tuni
 The blending modes do not work when exporting in PDF (due to limitations of the renderer) and SVG (due to limitations of the actual SVG format, i don't like filters).
 
 ## License
+
 The script in released under MIT license
